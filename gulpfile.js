@@ -5,6 +5,7 @@ const cleanCSS = require('gulp-clean-css');
 const del = require('del');
 const imagemin = require('gulp-imagemin');
 const sass = require('gulp-sass')(require('sass'));
+const pug = require('gulp-pug');
 
 function browsersync() {
     browserSync.init({
@@ -15,7 +16,10 @@ function browsersync() {
 }
 
 function html() {
-    return src('src/index.html')
+    return src('src/index.pug')
+        .pipe(pug({
+            pretty: true,
+        }))
         .pipe(dest('build'))
         .pipe(browserSync.stream())
 }
@@ -51,7 +55,7 @@ function clear() {
 
 
 function startWatch() {
-    watch('src/index.html', html)
+    watch('src/**/*.pug', html)
     watch('src/assets/styles/**/*.scss', css)
     watch('src/assets/images/**/*', images)
     watch('src/assets/fonts/**/*', fonts)
@@ -59,6 +63,7 @@ function startWatch() {
 
 exports.dev = parallel(browsersync,startWatch,html,images,fonts,css)
 exports.build = series(clear, parallel(html, images, fonts,css),watch)
+exports.clear = clear;
 
 
 exports.default = series(browsersync,html,images,fonts,css,watch)
