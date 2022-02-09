@@ -62,7 +62,7 @@ function startWatch() {
 }
 
 exports.dev = parallel(browsersync,startWatch,html,images,fonts,css)
-exports.build = series(clear, parallel(html, images, fonts,css),watch)
+exports.build = series(clear, parallel(html, images, fonts,css))
 exports.clear = clear;
 
 
